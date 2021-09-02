@@ -1,0 +1,16 @@
+- name: Docker image
+  hosts: localhost
+  gather_facts: No
+  tasks:
+  - name: Pull image
+    docker_image:
+      name: nginx
+      source: pull
+
+  - name: Build image
+    docker_image:
+      build:
+        path: /home/ivan/scripts/pipeline
+      name: web
+      source: build
+

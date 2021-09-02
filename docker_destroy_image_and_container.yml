@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Check if container exists
+    docker_container_info:
+      name: web
+    register: container_status
+
+  - name: Stop container
+    docker_container:
+      name: web
+      state: stopped
+    register: stop
+    when: container_status.exists
+
+  - name: Remove container
+    docker_container:
+      name: web
+      state: absent
+    register: result
+    when: stop.changed
+
+  - name: Delete image
+    docker_image:
+      name: web
+      state: absent
+
+#  - debug:
+#      var: container_status
+#  - debug:
+#      var: stop
+#  - debug:
+#      var: result
+
+## - debug:
+##    msg: "{{ 'Failed with message: ' ~ result.msg if result.failed else 'Something was done successfully' }}" 
